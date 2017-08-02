@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MetCam</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <color name="yellow">#DEE054</color>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="bps">Tempo</string>
+    <string name="timesignature">Time Signature</string>
+    <string name="dash">/</string>
+    <string name="volume">Volume</string>
+    <string name="one">1</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
+</resources>
