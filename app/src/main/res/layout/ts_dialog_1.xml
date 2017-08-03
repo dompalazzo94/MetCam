@@ -170,6 +170,7 @@
         <Button
             android:id="@+id/tsSetButton"
             android:layout_toEndOf="@id/tsCancelButton"
+            android:layout_toRightOf="@id/tsCancelButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Set" />
