@@ -21,7 +21,7 @@
         android:textSize="24sp" />
 
     <GridLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -154,25 +154,4 @@
             android:layout_row="3"
             android:text="16" />
     </GridLayout>
-
-    <RelativeLayout
-        android:id="@+id/buttonsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/tsCancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
-
-        <Button
-            android:id="@+id/tsSetButton"
-            android:layout_toEndOf="@id/tsCancelButton"
-            android:layout_toRightOf="@id/tsCancelButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Set" />
-    </RelativeLayout>
 </LinearLayout>

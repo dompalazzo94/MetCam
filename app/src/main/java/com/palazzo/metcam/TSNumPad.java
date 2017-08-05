@@ -2,6 +2,7 @@ package com.palazzo.metcam;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -39,19 +40,31 @@ public class TSNumPad {
 
     private TSNumPad tsNumPad;
 
+    private AlertDialog dialog;
+
+    private short beats;
+    private short values;
+
+    private TimeSignature ts;
+
+
     public interface tsNumPadInterface {
-        String tsNumPadInputValue(String beat, String value);
+        String tsNumPadInputValue(short beat, short value);
         String tsNumPadCanceled();
     }
 
-    public void show(final Activity a, final String promptString, final tsNumPadInterface postrun) {
+    public void show(final Activity a, TimeSignature timeSignature, final String promptString, final tsNumPadInterface postrun) {
         tsNumPad = this;
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(promptString);
         LayoutInflater inflater = a.getLayoutInflater();
         View view = inflater.inflate(R.layout.ts_dialog_1, null, false);
 
+        beats = timeSignature.getNoteValues();
+        values = timeSignature.getBeats();
+
         beatTextView = (TextView) view.findViewById(R.id.beatTextView);
+        beatTextView.setText("" + timeSignature.getBeats());
         valueTextView = (TextView) view.findViewById(R.id.valueTextView);
 
         one = (Button) view.findViewById(R.id.one);
@@ -59,6 +72,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("1");
+                beats = 1;
             }
         });
 
@@ -67,6 +81,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("2");
+                beats = 2;
             }
         });
 
@@ -75,6 +90,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("3");
+                beats = 3;
             }
         });
 
@@ -83,6 +99,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("4");
+                beats = 4;
             }
         });
 
@@ -91,6 +108,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("5");
+                beats = 5;
             }
         });
 
@@ -99,6 +117,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("6");
+                beats = 6;
             }
         });
 
@@ -107,6 +126,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("7");
+                beats = 7;
             }
         });
 
@@ -115,6 +135,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("8");
+                beats = 8;
             }
         });
 
@@ -123,6 +144,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("9");
+                beats = 9;
             }
         });
 
@@ -131,6 +153,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("10");
+                beats = 10;
             }
         });
 
@@ -139,6 +162,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("11");
+                beats = 11;
             }
         });
 
@@ -147,6 +171,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("12");
+                beats = 12;
             }
         });
 
@@ -155,6 +180,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("13");
+                beats = 13;
             }
         });
 
@@ -163,6 +189,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("14");
+                beats = 14;
             }
         });
 
@@ -171,6 +198,7 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("15");
+                beats = 15;
             }
         });
 
@@ -179,8 +207,119 @@ public class TSNumPad {
             @Override
             public void onClick(View v) {
                 beatTextView.setText("16");
+                beats = 16;
             }
         });
+
+        //dialog
+        builder.setView(view);
+        builder.setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog1, int which) {
+                show2(a, "Time Signature Select", new tsNumPadInterface() {
+                    @Override
+                    public String tsNumPadInputValue(short beat, short value) {
+                        if (beat != 0) {
+                            postrun.tsNumPadInputValue(beat, value);
+                        }
+                        else
+                            dialog1.dismiss();
+                        return null;
+                    }
+
+                    @Override
+                    public String tsNumPadCanceled() {
+                        dialog1.dismiss();
+                        postrun.tsNumPadCanceled();
+                        return null;
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    public void show2(final Activity a, final String promptString, final tsNumPadInterface postrun) {
+        tsNumPad = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(a);
+        builder.setTitle(promptString);
+        LayoutInflater inflater = a.getLayoutInflater();
+        View view = inflater.inflate(R.layout.ts_dialog_2, null, false);
+
+        beatTextView = (TextView) view.findViewById(R.id.beatTextView);
+        beatTextView.setText("" + beats);
+        valueTextView = (TextView) view.findViewById(R.id.valueTextView);
+
+        halves = (Button) view.findViewById(R.id.halves);
+        halves.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                valueTextView.setText("2");
+                values = 2;
+            }
+        });
+
+        quarters = (Button) view.findViewById(R.id.quarters);
+        quarters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                valueTextView.setText("4");
+                values = 4;
+            }
+        });
+
+        eighths = (Button) view.findViewById(R.id.eighths);
+        eighths.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                valueTextView.setText("8");
+                values = 8;
+            }
+        });
+
+        sixteenths = (Button) view.findViewById(R.id.sixteenths);
+        sixteenths.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                valueTextView.setText("16");
+                values = 16;
+            }
+        });
+
+        //dialog
+        builder.setView(view);
+        builder.setPositiveButton(R.string.set, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (values != 0) {
+                    ts = new TimeSignature(Beats.getBeat(beats), NoteValues.getNoteValue(values));
+                    postrun.tsNumPadInputValue(ts.getBeats(), ts.getNoteValues());
+                }
+                else {
+                    ts = new TimeSignature(Beats.getBeat(beats), NoteValues.four);
+                    postrun.tsNumPadInputValue(ts.getBeats(), ts.getNoteValues());
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                postrun.tsNumPadCanceled();
+
+            }
+        });
+        dialog = builder.create();
+        dialog.show();
+
     }
 
 }

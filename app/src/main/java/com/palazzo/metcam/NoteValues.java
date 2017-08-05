@@ -24,4 +24,18 @@ public enum NoteValues {
     public String toString() {
         return noteValue;
     }
+
+    public static NoteValues getNoteValue(short noteValues) {
+        switch(noteValues) {
+            case 2:
+                return NoteValues.two;
+            case 4:
+                return NoteValues.four;
+            case 8:
+                return NoteValues.eight;
+            case 16:
+                return NoteValues.sixteen;
+        }
+        return null;
+    }
 }

@@ -1,6 +1,7 @@
 package com.palazzo.metcam;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,14 +22,16 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+//TODO: when notevalue is changed, divide the tempo accordingly
+
+public class MainActivity extends Activity {
 
     private final short MIN_BPM = 40;
     private final short MAX_BPM = 300;
 
     private short bpm = 120;
-    private short noteValue = 4;
-    private short beats = 4;
+    private TimeSignature timeSignature;
+    private TextView timeSignatureText;
     private short volume;
     private short initialVolume;
     private double beatSound = 6400;
@@ -64,13 +67,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        timeSignature = new TimeSignature(Beats.four, NoteValues.four);
+
         metroTask = new MetronomeAsyncTask();
 
         bpmText = (TextView) findViewById(R.id.bps);
         bpmText.setText(""+bpm);
 
-        TextView timeSignatureText = (TextView) findViewById(R.id.timesignature);
-        timeSignatureText.setText(""+ beats + "/"+ noteValue);
+        timeSignatureText = (TextView) findViewById(R.id.timesignature);
+        timeSignatureText.setText(""+ timeSignature.getBeats() + "/" + timeSignature.getNoteValues());
 
         minusButton = (Button) findViewById(R.id.minus);
         minusButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -196,72 +201,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTSClick(View view) {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View v = layoutInflater.inflate(R.layout.ts_dialog_1, null);
-
-        //open dialog to select Time Signature
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(v);
-        builder.setTitle("Select Time Signature");
-
-        /*//setup numerator of time signature
-        Spinner beatSpinner = (Spinner) v.findViewById(R.id.notespinner);
-        ArrayAdapter<Beats> arrayBeats = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Beats.values());
-        beatSpinner.setAdapter(arrayBeats);
-        beatSpinner.setSelection(Beats.four.ordinal());
-        arrayBeats.setDropDownViewResource(R.layout.spinner_dropdown);
-        beatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //open dialog box to edit bpm
+        TSNumPad tsNumPad = new TSNumPad();
+        tsNumPad.show(this, timeSignature, "Time Signature Select", new TSNumPad.tsNumPadInterface() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Beats beat = (Beats) parent.getItemAtPosition(position);
-                TextView timeSignature = (TextView) findViewById(R.id.timesignature);
-                timeSignature.setText("" + beat + "/" + noteValue);
-                metroTask.setBeat(beat.getNum());
+            public String tsNumPadInputValue(short beat, short value) {
+                timeSignature.setBeats(beat);
+                timeSignature.setNoteValues(value);
+
+                timeSignatureText.setText("" + timeSignature.getBeats() + "/" + timeSignature.getNoteValues());
+
+                metroTask.setBeat(beat);
+                metroTask.setNoteValue(value);
+                return null;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public String tsNumPadCanceled() {
+                return null;
             }
         });
-
-        //setup denominator of time signature
-        Spinner noteSpinner = (Spinner) v.findViewById(R.id.notespinner);
-        ArrayAdapter<NoteValues> arrayValues = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, NoteValues.values());
-        noteSpinner.setAdapter(arrayValues);
-        noteSpinner.setSelection(NoteValues.four.ordinal());
-        arrayValues.setDropDownViewResource(R.layout.spinner_dropdown);
-        noteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                NoteValues noteValue = (NoteValues) parent.getItemAtPosition(position);
-                TextView timeSignature = (TextView) findViewById(R.id.timesignature);
-                timeSignature.setText("" + beats + "/" + noteValue);
-                metroTask.setNoteValue(noteValue.getNoteValue());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
-
-        builder.setPositiveButton(R.string.set, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.i("TS Check", "Time Signature has been set");
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.i("TS Check", "Time Signature dialog has been canceled");
-            }
-        });
-
-        Dialog d = builder.create();
-        d.show();
 
     }
 
@@ -313,8 +272,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected String doInBackground(Void... params) {
-            metronome.setBeat(beats);
-            metronome.setNoteValue(noteValue);
+            metronome.setBeat(timeSignature.getBeats());
+            metronome.setNoteValue(timeSignature.getNoteValues());
             metronome.setBpm(bpm);
             metronome.setBeatSound(beatSound);
             metronome.setSound(sound);

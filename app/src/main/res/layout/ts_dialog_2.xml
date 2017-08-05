@@ -59,25 +59,4 @@
             android:text="16" />
     </GridLayout>
 
-    <RelativeLayout
-        android:id="@+id/buttonsLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/tsCancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
-
-        <Button
-            android:id="@+id/tsSetButton"
-            android:layout_toEndOf="@id/tsCancelButton"
-            android:layout_toRightOf="@id/tsCancelButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Set" />
-    </RelativeLayout>
-
 </LinearLayout>
