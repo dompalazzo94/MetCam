@@ -16,6 +16,11 @@ public class TimeSignature {
         noteValues = values.getNoteValue();
     }
 
+    public TimeSignature() {
+        beats = 4;
+        noteValues = 4;
+    }
+
     public short getBeats() {
         return beats;
     }

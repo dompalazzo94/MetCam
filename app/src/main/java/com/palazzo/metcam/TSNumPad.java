@@ -3,6 +3,7 @@ package com.palazzo.metcam;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -36,16 +37,20 @@ public class TSNumPad {
     private static Button sixteenths;
 
     private static TextView beatTextView;
+    private static TextView beatTextView2;
     private static TextView valueTextView;
+    private static TextView valueTextView2;
 
     private TSNumPad tsNumPad;
 
     private AlertDialog dialog;
 
-    private short beats;
-    private short values;
+    private short beats = 0;
+    private short values = 0;
 
-    private TimeSignature ts;
+    private TimeSignature ts = new TimeSignature();
+
+    private final String TAG = "TSNumPad";
 
 
     public interface tsNumPadInterface {
@@ -60,12 +65,14 @@ public class TSNumPad {
         LayoutInflater inflater = a.getLayoutInflater();
         View view = inflater.inflate(R.layout.ts_dialog_1, null, false);
 
-        beats = timeSignature.getNoteValues();
-        values = timeSignature.getBeats();
+        ts = timeSignature;
+        beats = timeSignature.getBeats();
+        values = timeSignature.getNoteValues();
 
         beatTextView = (TextView) view.findViewById(R.id.beatTextView);
-        beatTextView.setText("" + timeSignature.getBeats());
+        beatTextView.setText("" + beats);
         valueTextView = (TextView) view.findViewById(R.id.valueTextView);
+        valueTextView.setText("" + values);
 
         one = (Button) view.findViewById(R.id.one);
         one.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +80,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("1");
                 beats = 1;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -82,6 +90,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("2");
                 beats = 2;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -91,6 +100,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("3");
                 beats = 3;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -100,6 +110,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("4");
                 beats = 4;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -109,6 +120,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("5");
                 beats = 5;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -118,6 +130,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("6");
                 beats = 6;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -127,6 +140,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("7");
                 beats = 7;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -136,6 +150,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("8");
                 beats = 8;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -145,6 +160,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("9");
                 beats = 9;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -154,6 +170,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("10");
                 beats = 10;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -163,6 +180,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("11");
                 beats = 11;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -172,6 +190,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("12");
                 beats = 12;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -181,6 +200,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("13");
                 beats = 13;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -190,6 +210,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("14");
                 beats = 14;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -199,6 +220,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("15");
                 beats = 15;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -208,6 +230,7 @@ public class TSNumPad {
             public void onClick(View v) {
                 beatTextView.setText("16");
                 beats = 16;
+                Log.d(TAG, "Beats was changed to " + beats);
             }
         });
 
@@ -215,22 +238,21 @@ public class TSNumPad {
         builder.setView(view);
         builder.setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(final DialogInterface dialog1, int which) {
-                show2(a, "Time Signature Select", new tsNumPadInterface() {
+            public void onClick(final DialogInterface dialog, int which) {
+                ts.setBeats(beats);
+                ts.setNoteValues(values);
+                Log.d(TAG, "Show 1:\nBeats = " + ts.getBeats() + "\nvalues = " + ts.getNoteValues());
+                show2(a, ts,"Time Signature Select", new tsNumPadInterface() {
                     @Override
                     public String tsNumPadInputValue(short beat, short value) {
-                        if (beat != 0) {
-                            postrun.tsNumPadInputValue(beat, value);
-                        }
-                        else
-                            dialog1.dismiss();
+                        dialog.dismiss();
+                        Log.d(TAG, "Show 1:\nBeats = " + beat + "\nvalues = " + value);
+                        postrun.tsNumPadInputValue(beat, value);
                         return null;
                     }
 
                     @Override
                     public String tsNumPadCanceled() {
-                        dialog1.dismiss();
-                        postrun.tsNumPadCanceled();
                         return null;
                     }
                 });
@@ -246,23 +268,28 @@ public class TSNumPad {
         dialog.show();
     }
 
-    public void show2(final Activity a, final String promptString, final tsNumPadInterface postrun) {
+    public void show2(final Activity a, TimeSignature timeSignature, final String promptString, final tsNumPadInterface postrun) {
         tsNumPad = this;
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         builder.setTitle(promptString);
         LayoutInflater inflater = a.getLayoutInflater();
         View view = inflater.inflate(R.layout.ts_dialog_2, null, false);
 
-        beatTextView = (TextView) view.findViewById(R.id.beatTextView);
-        beatTextView.setText("" + beats);
-        valueTextView = (TextView) view.findViewById(R.id.valueTextView);
+        ts = timeSignature;
+        Log.d(TAG, "Show 2:\nTimeSignature is " + ts.getBeats() + "/" + ts.getNoteValues());
+
+        beatTextView2 = (TextView) view.findViewById(R.id.beatTextView2);
+        beatTextView2.setText("" + ts.getBeats());
+        valueTextView2 = (TextView) view.findViewById(R.id.valueTextView2);
+        valueTextView2.setText("" + ts.getNoteValues());
 
         halves = (Button) view.findViewById(R.id.halves);
         halves.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                valueTextView.setText("2");
+                valueTextView2.setText("2");
                 values = 2;
+                Log.d(TAG, "Values was changed to " + values);
             }
         });
 
@@ -270,7 +297,7 @@ public class TSNumPad {
         quarters.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                valueTextView.setText("4");
+                valueTextView2.setText("4");
                 values = 4;
             }
         });
@@ -279,7 +306,7 @@ public class TSNumPad {
         eighths.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                valueTextView.setText("8");
+                valueTextView2.setText("8");
                 values = 8;
             }
         });
@@ -288,7 +315,7 @@ public class TSNumPad {
         sixteenths.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                valueTextView.setText("16");
+                valueTextView2.setText("16");
                 values = 16;
             }
         });
@@ -299,14 +326,8 @@ public class TSNumPad {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if (values != 0) {
-                    ts = new TimeSignature(Beats.getBeat(beats), NoteValues.getNoteValue(values));
-                    postrun.tsNumPadInputValue(ts.getBeats(), ts.getNoteValues());
-                }
-                else {
-                    ts = new TimeSignature(Beats.getBeat(beats), NoteValues.four);
-                    postrun.tsNumPadInputValue(ts.getBeats(), ts.getNoteValues());
-                }
+                ts.setNoteValues(values);
+                postrun.tsNumPadInputValue(ts.getBeats(), ts.getNoteValues());
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

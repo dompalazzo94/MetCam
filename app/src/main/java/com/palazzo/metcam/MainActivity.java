@@ -2,21 +2,16 @@ package com.palazzo.metcam;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -202,14 +197,16 @@ public class MainActivity extends Activity {
 
     public void onTSClick(View view) {
         //open dialog box to edit bpm
+        Log.d("TSNumPad", "TimeSignature is " + timeSignature.getBeats() + "/" + timeSignature.getNoteValues());
         TSNumPad tsNumPad = new TSNumPad();
+
         tsNumPad.show(this, timeSignature, "Time Signature Select", new TSNumPad.tsNumPadInterface() {
             @Override
             public String tsNumPadInputValue(short beat, short value) {
                 timeSignature.setBeats(beat);
                 timeSignature.setNoteValues(value);
 
-                timeSignatureText.setText("" + timeSignature.getBeats() + "/" + timeSignature.getNoteValues());
+                timeSignatureText.setText("" + beat + "/" + value);
 
                 metroTask.setBeat(beat);
                 metroTask.setNoteValue(value);

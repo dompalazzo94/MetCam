@@ -7,6 +7,8 @@ import android.os.Message;
  * Created by palaz on 3/1/2017.
  */
 
+//TODO: add accents to each timesignature
+
 public class Metronome {
 
     private double bpm;
